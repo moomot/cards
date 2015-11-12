@@ -1,37 +1,71 @@
 package com.appsolutions.cards;
 
-import android.media.AudioManager;
-import android.media.ToneGenerator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import model.Cards;
+import view.CustomListAdapter;
 
 
 public class MainActivity extends ActionBarActivity {
-    private TextView timerView;
-    private TextView mast_type;
+    private ListView navList;
 
-    private ImageView cardView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         __init();
     }
 
     private void __init() {
-        timerView = (TextView) findViewById(R.id.mast_time);
-        cardView = (ImageView) findViewById(R.id.imageView);
-        mast_type = (TextView) findViewById(R.id.mast_type);
-        Cards cards = new Cards(mast_type, cardView, timerView, this.getApplicationContext());
+        this.navList = (ListView) findViewById(R.id.navListView);
+        setAdapter();
+    }
 
+    private void setAdapter() {
+        String[] array = getResources().getStringArray(R.array.navigation);
+        ArrayAdapter adapter = new CustomListAdapter(this, array);
+        navList.setAdapter(adapter);
+        navList.setOnItemClickListener(onItemClickListener());
+        navList.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    return true; // Indicates that this has been handled by you and will not be forwarded further.
+                }
+                return false;
+            }
+        });
+    }
+
+    private AdapterView.OnItemClickListener onItemClickListener() {
+        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: {
+                        Intent newGame = new Intent(getApplicationContext(), CreateGameActivity.class);
+                        startActivity(newGame);
+                        break;
+                    }
+                    case 1: {
+                        //HighScores
+                        break;
+                    }
+                    case 2: {
+                        //Settings
+                        break;
+                    }
+                }
+            }
+        };
+        return clickListener;
     }
 
 
@@ -57,5 +91,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

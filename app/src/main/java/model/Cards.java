@@ -1,7 +1,6 @@
 package model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.CountDownTimer;
@@ -11,8 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Random;
 
 /**
  * Created by Администратор on 06.11.2015.
@@ -26,6 +23,7 @@ public class Cards {
     private Runnable runnable;
     private Handler handler;
     private Context context;
+    private boolean threadStatus = false;
 
     private int timerTime = 5000;
     private int postTime = 0;
@@ -49,10 +47,12 @@ public class Cards {
         countDownStart();
     }
     public void countDownStart() {
+        threadStatus = true;
         handler = new Handler();
         runnable = new Runnable() {
             @Override
             public void run() {
+               if(!threadStatus) return;
                handler.postDelayed(this, 1000);
                 try {
                     if(timerTime > 0) {
@@ -97,5 +97,9 @@ public class Cards {
 
         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_MUSIC, 90);
         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+    }
+
+    public void stopHandler() {
+        this.threadStatus = false;
     }
 }

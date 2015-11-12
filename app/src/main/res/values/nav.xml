@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="navigation">
+        <item>Новая игра</item>
+        <item>Статистика</item>
+        <item>Настройки</item>
+    </string-array>
+</resources>
